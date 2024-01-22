@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .template-header {
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .input-output {
+            display: flex;
+            gap: 20px;
+        }
+
+	body {
+            background-color: gray;
+            color: lightgray;
+        }
+
+        div[contentEditable], #outputArea_etm {
+            width: 100ch;
+            height: 100px;
+            border: 1px solid gray;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        div[contentEditable], #outputArea_lp {
+            width: 100ch;
+            height: 100px;
+            border: 1px solid gray;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        div[contentEditable], #outputArea_mr {
+            width: 100ch;
+            height: 100px;
+            border: 1px solid gray;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        div[contentEditable], #outputArea_itu {
+            width: 100ch;
+            height: 100px;
+            border: 1px solid gray;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        div[contentEditable], #outputArea_hlra {
+            width: 100ch;
+            height: 100px;
+            border: 1px solid gray;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .black {
+            color: lightgray;
+        }
+
+        #charCount {
+            margin-top: 10px;
+            font-weight: bold;
+            display: grid;
+            place-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="template-header">
+        <h1>Executing the Mission</h1>
+    </div>
+    <div class="container">
+        <div class="input-output">
+            <div id="inputArea_etm" contentEditable="true" placeholder="Type here..."></div>
+            <div id="outputArea_etm" readonly></div>
+        </div>
+        <div id="charCount_etm">Characters: 0</div>
+    </div>
+
+    <div class="template-header">
+        <h1>Leading People</h1>
+    </div>
+    <div class="container">
+        <div class="input-output">
+            <div id="inputArea_lp" contentEditable="true" placeholder="Type here..."></div>
+            <div id="outputArea_lp" readonly></div>
+        </div>
+        <div id="charCount_lp">Characters: 0</div>
+    </div>
+
+    <div class="template-header">
+        <h1>Managing Resources</h1>
+    </div>
+    <div class="container">
+        <div class="input-output">
+            <div id="inputArea_mr" contentEditable="true" placeholder="Type here..."></div>
+            <div id="outputArea_mr" readonly></div>
+        </div>
+        <div id="charCount_mr">Characters: 0</div>
+    </div>
+
+
+    <div class="template-header">
+        <h1>Improving the Unit</h1>
+    </div>
+    <div class="container">
+        <div class="input-output">
+            <div id="inputArea_itu" contentEditable="true" placeholder="Type here..."></div>
+            <div id="outputArea_itu" readonly></div>
+        </div>
+        <div id="charCount_itu">Characters: 0</div>
+    </div>
+
+    <div class="template-header">
+        <h1>Higher Level Reviewer Assessment</h1>
+    </div>
+    <div class="container">
+        <div class="input-output">
+            <div id="inputArea_hlra" contentEditable="true" placeholder="Type here..."></div>
+            <div id="outputArea_hlra" readonly></div>
+        </div>
+        <div id="charCount_hlra">Characters: 0</div>
+    </div>
+
+
+
+    <script>
+        document.getElementById('inputArea_etm').addEventListener('input', function() {
+            var text = this.innerText;
+            document.getElementById('outputArea_etm').innerHTML = '';
+            document.getElementById('charCount_etm').textContent = 'Characters: ' + text.length;
+
+            for (var i = 0; i < text.length; i++) {
+                var charSpan = document.createElement('span');
+                charSpan.textContent = text[i];
+
+                if (i >= 350) {
+                    charSpan.classList.add('red');
+                } else {
+                    charSpan.classList.add('black');
+                }
+
+                document.getElementById('outputArea_etm').appendChild(charSpan);
+            }
+        });
+
+        document.getElementById('inputArea_lp').addEventListener('input', function() {
+            var text = this.innerText;
+            document.getElementById('outputArea_lp').innerHTML = '';
+            document.getElementById('charCount_lp').textContent = 'Characters: ' + text.length;
+
+            for (var i = 0; i < text.length; i++) {
+                var charSpan = document.createElement('span');
+                charSpan.textContent = text[i];
+
+                if (i >= 350) {
+                    charSpan.classList.add('red');
+                } else {
+                    charSpan.classList.add('black');
+                }
+
+                document.getElementById('outputArea_lp').appendChild(charSpan);
+            }
+        });
+
+        document.getElementById('inputArea_mr').addEventListener('input', function() {
+            var text = this.innerText;
+            document.getElementById('outputArea_mr').innerHTML = '';
+            document.getElementById('charCount_mr').textContent = 'Characters: ' + text.length;
+
+            for (var i = 0; i < text.length; i++) {
+                var charSpan = document.createElement('span');
+                charSpan.textContent = text[i];
+
+                if (i >= 350) {
+                    charSpan.classList.add('red');
+                } else {
+                    charSpan.classList.add('black');
+                }
+
+                document.getElementById('outputArea_mr').appendChild(charSpan);
+            }
+        });
+
+        document.getElementById('inputArea_itu').addEventListener('input', function() {
+            var text = this.innerText;
+            document.getElementById('outputArea_itu').innerHTML = '';
+            document.getElementById('charCount_itu').textContent = 'Characters: ' + text.length;
+
+            for (var i = 0; i < text.length; i++) {
+                var charSpan = document.createElement('span');
+                charSpan.textContent = text[i];
+
+                if (i >= 350) {
+                    charSpan.classList.add('red');
+                } else {
+                    charSpan.classList.add('black');
+                }
+
+                document.getElementById('outputArea_itu').appendChild(charSpan);
+            }
+        });
+
+        document.getElementById('inputArea_hlra').addEventListener('input', function() {
+            var text = this.innerText;
+            document.getElementById('outputArea_hlra').innerHTML = '';
+            document.getElementById('charCount_hlra').textContent = 'Characters: ' + text.length;
+
+            for (var i = 0; i < text.length; i++) {
+                var charSpan = document.createElement('span');
+                charSpan.textContent = text[i];
+
+                if (i >= 250) {
+                    charSpan.classList.add('red');
+                } else {
+                    charSpan.classList.add('black');
+                }
+
+                document.getElementById('outputArea_hlra').appendChild(charSpan);
+            }
+        });
+    </script>
+</body>
+</html>
