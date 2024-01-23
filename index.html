@@ -138,6 +138,12 @@
     </div>
 
     <script>
+        document.getElementById("inputArea_etm").addEventListener('paste', function(event) {
+            event.preventDefault();
+            let text = (event.originalEvent || event).clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
+        });
+
         document.getElementById('inputArea_etm').addEventListener('input', function() {
             var text = htmlDecode( this.innerText );
             
