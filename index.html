@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
         .header {
@@ -32,7 +33,9 @@
             gap: 20px;
         }
 
-        div[contentEditable], #inputArea_etm, #outputArea_etm {
+        div[contentEditable],
+        #inputArea_etm,
+        #outputArea_etm {
             width: 80%;
             margin: 0px auto;
             height: 265px;
@@ -42,18 +45,20 @@
             max-width: 540px;
         }
 
-        th, td {
+        th,
+        td {
             width: 87%;
             margin: 0px auto;
             border: 1px solid black;
         }
+
         table {
             width: 87%;
             margin: 0px auto;
             border: 1px solid black;
             height: 100%;
         }
-        
+
         .red {
             color: red;
         }
@@ -90,17 +95,20 @@
             flex-direction: row;
             /* border: 1px solid black; */
         }
+
         .revisions {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .revision_element {
             max-width: 50%;
             margin: 5px auto;
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>EPB Power Editor</h1>
@@ -129,7 +137,8 @@
         <div class="revisions_div">
             <div class="buttons_div">
                 <button type="button" class="revision_button" onclick="save_revision_table()">Save Revision</button>
-                <button type="button" class="revision_button" onclick="remove_revisions()" style="background-color: red;">Reset Revisions</button>
+                <button type="button" class="revision_button" onclick="remove_revisions()"
+                    style="background-color: red;">Reset Revisions</button>
             </div>
             <div id="revisions" class="revisions">
                 <h1>Revisions</h1>
@@ -138,16 +147,16 @@
     </div>
 
     <script>
-        document.getElementById("inputArea_etm").addEventListener('paste', function(event) {
+        document.getElementById("inputArea_etm").addEventListener('paste', function (event) {
             event.preventDefault();
             let text = (event.originalEvent || event).clipboardData.getData('text/plain');
             document.execCommand('insertText', false, text);
         });
 
-        document.getElementById('inputArea_etm').addEventListener('input', function() {
-            var text = htmlDecode( this.innerText );
-            
-            console.log( "'" + text + "'" );
+        document.getElementById('inputArea_etm').addEventListener('input', function () {
+            var text = htmlDecode(this.innerText);
+
+            console.log("'" + text + "'");
             document.getElementById('outputArea_etm').innerHTML = '';
             document.getElementById('charCount_etm').textContent = 'Characters: ' + text.length;
             document.getElementById('avaliable_char_etm').textContent = 'Available: ' + (350 - text.length);
@@ -160,24 +169,24 @@
             for (var i = 0; i < text.length; i++) {
                 revision_text = revision_text.concat(text[i]);
 
-                
+
                 if (i == 350) {
                     charSpan.textContent = revision_text;
-                    document.getElementById( "outputArea_etm" ).appendChild(charSpan);
+                    document.getElementById("outputArea_etm").appendChild(charSpan);
                     charSpan = document.createElement('span');
                     charSpan.classList.add('red');
                     revision_text = ""
                 }
 
                 charSpan.textContent = revision_text;
-                document.getElementById( "outputArea_etm" ).appendChild( charSpan )
+                document.getElementById("outputArea_etm").appendChild(charSpan)
             }
         });
 
-        function save_revision_table(){
-            var text = document.getElementById( "outputArea_etm" ).innerHTML;
-            var output = htmlDecode( text ) 
-            
+        function save_revision_table() {
+            var text = document.getElementById("outputArea_etm").innerHTML;
+            var output = htmlDecode(text)
+
             var new_div = document.createElement('div')
             new_div.className = "revision_element"
 
@@ -196,21 +205,21 @@
             col_2_a.innerHTML = "Characters: " + (output.length)
 
             var col_2_b = document.createElement("td")
-            col_2_b.innerHTML = "Avaliable: " + ( 350 - output.length)
+            col_2_b.innerHTML = "Avaliable: " + (350 - output.length)
 
-            row_1.appendChild( col_1 )
-            row_1.appendChild( col_2_a )
+            row_1.appendChild(col_1)
+            row_1.appendChild(col_2_a)
             row_2.appendChild(col_2_b)
 
             new_table.appendChild(row_1)
             new_table.appendChild(row_2)
-            
-            new_div.appendChild( new_table)
 
-            document.getElementById( "revisions" ).appendChild( new_div )
+            new_div.appendChild(new_table)
+
+            document.getElementById("revisions").appendChild(new_div)
         }
 
-        function remove_revisions () {
+        function remove_revisions() {
             var elements = document.querySelectorAll('.revision_element');
 
             elements.forEach((element) => {
@@ -229,7 +238,7 @@
                 let ch = output.charCodeAt(i);
                 if (!(ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57)) {
                     console.log("String contains special characters");
-                    console.log( ch )
+                    console.log(ch)
                     break;
                 }
             }
@@ -237,4 +246,5 @@
         }
     </script>
 </body>
+
 </html>
