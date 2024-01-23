@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
-        .template-header {
+        .header {
             text-align: center;
         }
 
+        body {
+            background-color: gray;
+            color: lightgray;
+        }
+
+        .main-editor {
+            margin: 0px auto;
+            height: 300px;
+        }
+
         .container {
+            margin: 0px auto;
             display: flex;
             justify-content: center;
+            border: 1px solid black;
+        }
+
+        .io_boxes {
+            width: 40%;
         }
 
         .input-output {
@@ -16,22 +33,30 @@
             gap: 20px;
         }
 
-	body {
-            background-color: gray;
-            color: lightgray;
+        div[contentEditable],
+        #inputArea_etm,
+        #outputArea_etm {
+            width: 80%;
+            margin: 0px auto;
+            height: 265px;
+            border: 1px solid black;
+            padding: 10px;
+            overflow-wrap: break-word;
+            max-width: 540px;
         }
 
-        div[contentEditable], 
-        #outputArea_etm, 
-        #outputArea_lp,
-        #outputArea_mr,
-        #outputArea_itu,
-        #outputArea_hlra  {
-            width: 100ch;
-            height: 100px;
-            border: 1px solid gray;
-            padding: 10px;
-            overflow: auto;
+        th,
+        td {
+            width: 87%;
+            margin: 0px auto;
+            border: 1px solid black;
+        }
+
+        table {
+            width: 87%;
+            margin: 0px auto;
+            border: 1px solid black;
+            height: 100%;
         }
 
         .red {
@@ -48,163 +73,178 @@
             display: grid;
             place-items: center;
         }
+
+        .revisions_div {
+            margin: 0px auto;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            /* border: 1px solid black; */
+        }
+
+        .revision_button {
+            width: 50%;
+            margin: 10px;
+        }
+
+        .buttons_div {
+            width: 200px;
+            justify-content: center;
+            display: flex;
+            flex-direction: row;
+            /* border: 1px solid black; */
+        }
+
+        .revisions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .revision_element {
+            max-width: 50%;
+            margin: 5px auto;
+        }
     </style>
 </head>
+
 <body>
-
-    <div class="template-header">
-        <h1>Executing the Mission</h1>
+    <div class="header">
+        <h1>EPB Power Editor</h1>
     </div>
-    <div class="container">
-        <div class="input-output">
-            <div id="inputArea_etm" contentEditable="true" placeholder="Type here..."></div>
-            <div id="outputArea_etm" readonly></div>
+    <div class="main-editor">
+        <table>
+            <tbody>
+                <tr>
+                    <td rowspan="2" class="io_boxes">
+                        <div id="inputArea_etm" contentEditable="true" placeholder="Type here..."></div>
+                    </td>
+                    <td rowspan="2" class="io_boxes">
+                        <div id="outputArea_etm" readonly></div>
+                    </td>
+                    <td>
+                        <div id="charCount_etm">Characters: 0</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="avaliable_char_etm">Avaliable: 0</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="revisions_div">
+            <div class="buttons_div">
+                <button type="button" class="revision_button" onclick="save_revision_table()">Save Revision</button>
+                <button type="button" class="revision_button" onclick="remove_revisions()"
+                    style="background-color: red;">Reset Revisions</button>
+            </div>
+            <div id="revisions" class="revisions">
+                <h1>Revisions</h1>
+            </div>
         </div>
-        <div id="charCount_etm">Characters: 0</div>
     </div>
-
-    <div class="template-header">
-        <h1>Leading People</h1>
-    </div>
-    <div class="container">
-        <div class="input-output">
-            <div id="inputArea_lp" contentEditable="true" placeholder="Type here..."></div>
-            <div id="outputArea_lp" readonly></div>
-        </div>
-        <div id="charCount_lp">Characters: 0</div>
-    </div>
-
-    <div class="template-header">
-        <h1>Managing Resources</h1>
-    </div>
-    <div class="container">
-        <div class="input-output">
-            <div id="inputArea_mr" contentEditable="true" placeholder="Type here..."></div>
-            <div id="outputArea_mr" readonly></div>
-        </div>
-        <div id="charCount_mr">Characters: 0</div>
-    </div>
-
-
-    <div class="template-header">
-        <h1>Improving the Unit</h1>
-    </div>
-    <div class="container">
-        <div class="input-output">
-            <div id="inputArea_itu" contentEditable="true" placeholder="Type here..."></div>
-            <div id="outputArea_itu" readonly></div>
-        </div>
-        <div id="charCount_itu">Characters: 0</div>
-    </div>
-
-    <div class="template-header">
-        <h1>Higher Level Reviewer Assessment</h1>
-    </div>
-    <div class="container">
-        <div class="input-output">
-            <div id="inputArea_hlra" contentEditable="true" placeholder="Type here..."></div>
-            <div id="outputArea_hlra" readonly></div>
-        </div>
-        <div id="charCount_hlra">Characters: 0</div>
-    </div>
-
-
 
     <script>
-        document.getElementById('inputArea_etm').addEventListener('input', function() {
-            var text = this.innerText;
+        document.getElementById("inputArea_etm").addEventListener('paste', function (event) {
+            event.preventDefault();
+            let text = (event.originalEvent || event).clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
+        });
+
+        document.getElementById('inputArea_etm').addEventListener('input', function () {
+            var text = htmlDecode(this.innerText);
+
+            console.log("'" + text + "'");
             document.getElementById('outputArea_etm').innerHTML = '';
             document.getElementById('charCount_etm').textContent = 'Characters: ' + text.length;
+            document.getElementById('avaliable_char_etm').textContent = 'Available: ' + (350 - text.length);
+
+            var charSpan = document.createElement('span');
+            charSpan.classList.add('black');
+
+            var revision_text = ""
 
             for (var i = 0; i < text.length; i++) {
-                var charSpan = document.createElement('span');
-                charSpan.textContent = text[i];
+                revision_text = revision_text.concat(text[i]);
 
-                if (i >= 350) {
+
+                if (i == 350) {
+                    charSpan.textContent = revision_text;
+                    document.getElementById("outputArea_etm").appendChild(charSpan);
+                    charSpan = document.createElement('span');
                     charSpan.classList.add('red');
-                } else {
-                    charSpan.classList.add('black');
+                    revision_text = ""
                 }
 
-                document.getElementById('outputArea_etm').appendChild(charSpan);
+                charSpan.textContent = revision_text;
+                document.getElementById("outputArea_etm").appendChild(charSpan)
             }
         });
 
-        document.getElementById('inputArea_lp').addEventListener('input', function() {
-            var text = this.innerText;
-            document.getElementById('outputArea_lp').innerHTML = '';
-            document.getElementById('charCount_lp').textContent = 'Characters: ' + text.length;
+        function save_revision_table() {
+            var text = document.getElementById("outputArea_etm").innerHTML;
+            var output = htmlDecode(text)
 
-            for (var i = 0; i < text.length; i++) {
-                var charSpan = document.createElement('span');
-                charSpan.textContent = text[i];
+            var new_div = document.createElement('div')
+            new_div.className = "revision_element"
 
-                if (i >= 350) {
-                    charSpan.classList.add('red');
-                } else {
-                    charSpan.classList.add('black');
+            var new_table = document.createElement('table')
+            var new_table_body = document.createElement('tbody')
+
+            var row_1 = document.createElement("tr")
+            var row_2 = document.createElement("tr")
+
+            var col_1 = document.createElement("td")
+            col_1.rowSpan = "2"
+            col_1.innerHTML = text
+
+
+            var col_2_a = document.createElement("td")
+            col_2_a.innerHTML = "Characters: " + (output.length)
+
+            var col_2_b = document.createElement("td")
+            col_2_b.innerHTML = "Avaliable: " + (350 - output.length)
+
+            row_1.appendChild(col_1)
+            row_1.appendChild(col_2_a)
+            row_2.appendChild(col_2_b)
+
+            new_table.appendChild(row_1)
+            new_table.appendChild(row_2)
+
+            new_div.appendChild(new_table)
+
+            document.getElementById("revisions").appendChild(new_div)
+        }
+
+        function remove_revisions() {
+            var elements = document.querySelectorAll('.revision_element');
+
+            elements.forEach((element) => {
+                element.innerHTML = ""
+                element.classList.remove('revision_element');
+            });
+        }
+
+        function htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            var output = doc.documentElement.textContent
+            output = output.replace(/\n/g, "")
+            output = output.replace(/\r\n/g, "")
+
+            for (let i = 0; i < output.length; ++i) {
+                let ch = output.charCodeAt(i);
+                if (!(ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57)) {
+                    console.log("String contains special characters");
+                    console.log(ch)
+                    break;
                 }
-
-                document.getElementById('outputArea_lp').appendChild(charSpan);
             }
-        });
-
-        document.getElementById('inputArea_mr').addEventListener('input', function() {
-            var text = this.innerText;
-            document.getElementById('outputArea_mr').innerHTML = '';
-            document.getElementById('charCount_mr').textContent = 'Characters: ' + text.length;
-
-            for (var i = 0; i < text.length; i++) {
-                var charSpan = document.createElement('span');
-                charSpan.textContent = text[i];
-
-                if (i >= 350) {
-                    charSpan.classList.add('red');
-                } else {
-                    charSpan.classList.add('black');
-                }
-
-                document.getElementById('outputArea_mr').appendChild(charSpan);
-            }
-        });
-
-        document.getElementById('inputArea_itu').addEventListener('input', function() {
-            var text = this.innerText;
-            document.getElementById('outputArea_itu').innerHTML = '';
-            document.getElementById('charCount_itu').textContent = 'Characters: ' + text.length;
-
-            for (var i = 0; i < text.length; i++) {
-                var charSpan = document.createElement('span');
-                charSpan.textContent = text[i];
-
-                if (i >= 350) {
-                    charSpan.classList.add('red');
-                } else {
-                    charSpan.classList.add('black');
-                }
-
-                document.getElementById('outputArea_itu').appendChild(charSpan);
-            }
-        });
-
-        document.getElementById('inputArea_hlra').addEventListener('input', function() {
-            var text = this.innerText;
-            document.getElementById('outputArea_hlra').innerHTML = '';
-            document.getElementById('charCount_hlra').textContent = 'Characters: ' + text.length;
-
-            for (var i = 0; i < text.length; i++) {
-                var charSpan = document.createElement('span');
-                charSpan.textContent = text[i];
-
-                if (i >= 250) {
-                    charSpan.classList.add('red');
-                } else {
-                    charSpan.classList.add('black');
-                }
-
-                document.getElementById('outputArea_hlra').appendChild(charSpan);
-            }
-        });
+            return output
+        }
     </script>
 </body>
+
 </html>
