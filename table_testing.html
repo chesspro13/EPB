@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        th, td {
+            width: 87%;
+            margin: 0px auto;
+            border: 1px solid black;
+        }
+        table {
+            width: 87%;
+            margin: 0px auto;
+            border: 1px solid black;
+            height: 100%;
+        }
+	    body {
+            background-color: gray;
+            color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="template-header" id="testing_area">
+        <h1>Table Testing</h1>
+    </div>
+
+    <script>
+        var text = document.getElementById( "testing_area" );
+        
+        var new_div = document.createElement('div')
+
+        var new_table = document.createElement('table')
+        var new_table_body = document.createElement('tbody')
+
+        var row_1 = document.createElement("tr")
+        var row_2 = document.createElement("tr")
+
+        var col_1 = document.createElement("td")
+        col_1.rowSpan = "2"
+        col_1.innerHTML = "Butts"
+
+
+        var col_2_a = document.createElement("td")
+        col_2_a.innerHTML = "Butts"
+
+        var col_2_b = document.createElement("td")
+        col_2_b.innerHTML = "Butts"
+
+        row_1.appendChild( col_1 )
+        row_1.appendChild( col_2_a )
+        row_2.appendChild(col_2_b)
+
+        new_table.appendChild(row_1)
+        new_table.appendChild(row_2)
+        
+        new_div.appendChild( new_table)
+        text.appendChild( new_div )
+    
+    </script>
+</body>
+</html>
