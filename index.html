@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <title>  Power EPB Editor </title>
     <style>
         .header {
             text-align: center;
@@ -112,6 +113,7 @@
 <body>
     <div class="header">
         <h1>EPB Power Editor</h1>
+        <h4>V0.2</h4>
     </div>
     <div class="main-editor">
         <table>
@@ -159,7 +161,8 @@
             console.log("'" + text + "'");
             document.getElementById('outputArea_etm').innerHTML = '';
             document.getElementById('charCount_etm').textContent = 'Characters: ' + text.length;
-            document.getElementById('avaliable_char_etm').textContent = 'Available: ' + (350 - text.length);
+            let left_over = Math.max( 0, 350 - text.length)
+            document.getElementById('avaliable_char_etm').textContent = 'Available: ' + left_over;
 
             var charSpan = document.createElement('span');
             charSpan.classList.add('black');
@@ -170,7 +173,7 @@
                 revision_text = revision_text.concat(text[i]);
 
 
-                if (i == 350) {
+                if (i == 349) {
                     charSpan.textContent = revision_text;
                     document.getElementById("outputArea_etm").appendChild(charSpan);
                     charSpan = document.createElement('span');
