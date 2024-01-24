@@ -2,41 +2,78 @@
 <html>
 
 <head>
-    <title>  Power EPB Editor </title>
+    <title> Power EPB Editor </title>
     <style>
-        .header {
-            text-align: center;
+        /* Navigation Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: black;
         }
 
-        body {
-            background-color: gray;
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
             color: lightgray;
         }
 
-        .main-editor {
-            margin: 0px auto;
-            height: 300px;
+        #dark_mode_icon {
+            height: 30px;
+        }
+        
+        #menu_icon {
+            margin: 3px;
         }
 
-        .container {
-            margin: 0px auto;
+        /* General */
+
+        :root {
+            --bg-color: #1f1f1f;
+            /* Background color */
+            --text-color: lightgray;
+            /* Text color */
+        }
+
+        .light-mode {
+            --bg-color: lightgray;
+            /* Background color */
+            --text-color: #404040;
+            /* Text color */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
-            border: 1px solid black;
+            flex-direction: column;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Editor  */
+
+        .main-editor {
+            margin: 10px auto;
+            height: 300px;
+            width: 100%;
         }
 
         .io_boxes {
             width: 40%;
         }
 
-        .input-output {
-            display: flex;
-            gap: 20px;
-        }
-
         div[contentEditable],
-        #inputArea_etm,
-        #outputArea_etm {
+        #input_area,
+        #output_area {
             width: 80%;
             margin: 0px auto;
             height: 265px;
@@ -46,18 +83,11 @@
             max-width: 540px;
         }
 
-        th,
-        td {
-            width: 87%;
-            margin: 0px auto;
-            border: 1px solid black;
-        }
-
-        table {
-            width: 87%;
-            margin: 0px auto;
-            border: 1px solid black;
-            height: 100%;
+        #charCount {
+            margin-top: 10px;
+            font-weight: bold;
+            display: grid;
+            place-items: center;
         }
 
         .red {
@@ -68,34 +98,7 @@
             color: lightgray;
         }
 
-        #charCount {
-            margin-top: 10px;
-            font-weight: bold;
-            display: grid;
-            place-items: center;
-        }
-
-        .revisions_div {
-            margin: 0px auto;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            /* border: 1px solid black; */
-        }
-
-        .revision_button {
-            width: 50%;
-            margin: 10px;
-        }
-
-        .buttons_div {
-            width: 200px;
-            justify-content: center;
-            display: flex;
-            flex-direction: row;
-            /* border: 1px solid black; */
-        }
+        /* Revisions */
 
         .revisions {
             display: flex;
@@ -104,26 +107,68 @@
         }
 
         .revision_element {
-            max-width: 50%;
+            max-width: 75%;
             margin: 5px auto;
         }
+
+        .revision_button {
+            width: 50%;
+            margin: 10px;
+        }
+
+        table {
+            width: 87%;
+            max-width: 90%;
+            margin: 0px auto;
+            border: 1px solid black;
+            height: 100%;
+        }
+
+        th,
+        td {
+            width: 87%;
+            margin: 0px auto;
+            border: 1px solid black;
+        }
+
+        .revisions_div {
+            margin: 5px auto;
+            margin-left: 10px auto;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+        }
+
+        .buttons_div {
+            width: 200px;
+            justify-content: center;
+            display: flex;
+            flex-direction: row;
+        }
     </style>
+
+
 </head>
 
 <body>
-    <div class="header">
-        <h1>EPB Power Editor</h1>
-        <h4>V0.2</h4>
-    </div>
+    <header class="top-bar">
+        <div class="logo">Power EPB Editor</div>
+        <div class="icons">
+            <img id="dark_mode_icon" src="../icons/dark_mode/dark_mode.png" alt="Dark Mode" onclick="toggleDarkMode()">
+            <img id="menu_icon" src="../icons/menu_icon.png" alt="Menu Icon" onclick="">
+        </div>
+    </header>
     <div class="main-editor">
         <table>
             <tbody>
                 <tr>
                     <td rowspan="2" class="io_boxes">
-                        <div id="inputArea_etm" contentEditable="true" placeholder="Type here..."></div>
+                        <div id="input_area" contentEditable="true" placeholder="Type here..."></div>
                     </td>
                     <td rowspan="2" class="io_boxes">
-                        <div id="outputArea_etm" readonly></div>
+                        <div id="output_area" readonly></div>
                     </td>
                     <td>
                         <div id="charCount_etm">Characters: 0</div>
@@ -148,106 +193,124 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById("inputArea_etm").addEventListener('paste', function (event) {
-            event.preventDefault();
-            let text = (event.originalEvent || event).clipboardData.getData('text/plain');
-            document.execCommand('insertText', false, text);
-        });
-
-        document.getElementById('inputArea_etm').addEventListener('input', function () {
-            var text = htmlDecode(this.innerText);
-
-            console.log("'" + text + "'");
-            document.getElementById('outputArea_etm').innerHTML = '';
-            document.getElementById('charCount_etm').textContent = 'Characters: ' + text.length;
-            let left_over = Math.max( 0, 350 - text.length)
-            document.getElementById('avaliable_char_etm').textContent = 'Available: ' + left_over;
-
-            var charSpan = document.createElement('span');
-            charSpan.classList.add('black');
-
-            var revision_text = ""
-
-            for (var i = 0; i < text.length; i++) {
-                revision_text = revision_text.concat(text[i]);
-
-
-                if (i == 349) {
-                    charSpan.textContent = revision_text;
-                    document.getElementById("outputArea_etm").appendChild(charSpan);
-                    charSpan = document.createElement('span');
-                    charSpan.classList.add('red');
-                    revision_text = ""
-                }
-
-                charSpan.textContent = revision_text;
-                document.getElementById("outputArea_etm").appendChild(charSpan)
-            }
-        });
-
-        function save_revision_table() {
-            var text = document.getElementById("outputArea_etm").innerHTML;
-            var output = htmlDecode(text)
-
-            var new_div = document.createElement('div')
-            new_div.className = "revision_element"
-
-            var new_table = document.createElement('table')
-            var new_table_body = document.createElement('tbody')
-
-            var row_1 = document.createElement("tr")
-            var row_2 = document.createElement("tr")
-
-            var col_1 = document.createElement("td")
-            col_1.rowSpan = "2"
-            col_1.innerHTML = text
-
-
-            var col_2_a = document.createElement("td")
-            col_2_a.innerHTML = "Characters: " + (output.length)
-
-            var col_2_b = document.createElement("td")
-            col_2_b.innerHTML = "Avaliable: " + (350 - output.length)
-
-            row_1.appendChild(col_1)
-            row_1.appendChild(col_2_a)
-            row_2.appendChild(col_2_b)
-
-            new_table.appendChild(row_1)
-            new_table.appendChild(row_2)
-
-            new_div.appendChild(new_table)
-
-            document.getElementById("revisions").appendChild(new_div)
-        }
-
-        function remove_revisions() {
-            var elements = document.querySelectorAll('.revision_element');
-
-            elements.forEach((element) => {
-                element.innerHTML = ""
-                element.classList.remove('revision_element');
-            });
-        }
-
-        function htmlDecode(input) {
-            var doc = new DOMParser().parseFromString(input, "text/html");
-            var output = doc.documentElement.textContent
-            output = output.replace(/\n/g, "")
-            output = output.replace(/\r\n/g, "")
-
-            for (let i = 0; i < output.length; ++i) {
-                let ch = output.charCodeAt(i);
-                if (!(ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57)) {
-                    console.log("String contains special characters");
-                    console.log(ch)
-                    break;
-                }
-            }
-            return output
-        }
-    </script>
+    <footer>Version 0.1.2</footer>
 </body>
+<script>
+    document.getElementById("input_area").addEventListener('paste', function (event) {
+        event.preventDefault();
+        let text = (event.originalEvent || event).clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+    });
+
+    document.getElementById('input_area').addEventListener('input', function () {
+        var text = htmlDecode(this.innerText);
+
+        console.log("'" + text + "'");
+        document.getElementById('output_area').innerHTML = '';
+        document.getElementById('charCount_etm').textContent = 'Characters: ' + text.length;
+        let left_over = Math.max(0, 350 - text.length)
+        document.getElementById('avaliable_char_etm').textContent = 'Available: ' + left_over;
+
+        var charSpan = document.createElement('span');
+        charSpan.classList.add('black');
+
+        var revision_text = ""
+
+        for (var i = 0; i < text.length; i++) {
+            revision_text = revision_text.concat(text[i]);
+
+
+            if (i == 349) {
+                charSpan.textContent = revision_text;
+                document.getElementById("output_area").appendChild(charSpan);
+                charSpan = document.createElement('span');
+                charSpan.classList.add('red');
+                revision_text = ""
+            }
+
+            charSpan.textContent = revision_text;
+            document.getElementById("output_area").appendChild(charSpan)
+        }
+    });
+
+    function save_revision_table() {
+        var text = document.getElementById("output_area").innerHTML;
+        var output = htmlDecode(text)
+
+        var new_div = document.createElement('div')
+        new_div.className = "revision_element"
+
+        var new_table = document.createElement('table')
+        var new_table_body = document.createElement('tbody')
+
+        var row_1 = document.createElement("tr")
+        var row_2 = document.createElement("tr")
+
+        var col_1 = document.createElement("td")
+        col_1.rowSpan = "2"
+        col_1.innerHTML = text
+
+
+        var col_2_a = document.createElement("td")
+        col_2_a.innerHTML = "Characters: " + (output.length)
+
+        var col_2_b = document.createElement("td")
+        col_2_b.innerHTML = "Avaliable: " + (350 - output.length)
+
+        row_1.appendChild(col_1)
+        row_1.appendChild(col_2_a)
+        row_2.appendChild(col_2_b)
+
+        new_table.appendChild(row_1)
+        new_table.appendChild(row_2)
+
+        new_div.appendChild(new_table)
+
+        // document.getElementById("revisions").appendChild(new_div)
+        // document.getElementById("revisions").appendChild(new_div)
+
+        document.getElementById("revisions").insertAdjacentElement("afterend", new_div)
+    }
+
+    function remove_revisions() {
+        var elements = document.querySelectorAll('.revision_element');
+
+        elements.forEach((element) => {
+            element.innerHTML = ""
+            element.classList.remove('revision_element');
+        });
+    }
+
+    function htmlDecode(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        var output = doc.documentElement.textContent
+        output = output.replace(/\n/g, "")
+        output = output.replace(/\r\n/g, "")
+
+        for (let i = 0; i < output.length; ++i) {
+            let ch = output.charCodeAt(i);
+            if (!(ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || ch >= 48 && ch <= 57)) {
+                console.log("String contains special characters");
+                console.log(ch)
+                break;
+            }
+        }
+        return output
+    }
+
+
+    function toggleDarkMode() {
+        const body = document.body;
+        const icon = document.getElementById("dark_mode_icon")
+
+        if (body.classList.contains('light-mode')) {
+            body.classList.remove('light-mode');
+            icon.src = "icons/dark_mode/dark_mode.png"
+        } else {
+            body.classList.add('light-mode');
+            icon.src = "icons/dark_mode/light_mode.png"
+        }
+    }
+</script>
 
 </html>

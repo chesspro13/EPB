@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: black;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            color: lightgray;
+        }
+
+        #dark_mode_icon {
+            height: 30px;
+        }
+
+        :root {
+            --bg-color: #1f1f1f; /* Background color */
+            --text-color: lightgray; /* Text color */
+        }
+
+        .light-mode {
+            --bg-color: lightgray; /* Background color */
+            --text-color: #404040; /* Text color */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+    </style>
+
+    <header class="top-bar">
+        <div class="logo">Power EPB Editor</div>
+        <div class="icons">
+            <img id="dark_mode_icon" src="../icons/dark_mode/dark_mode.png" alt="Dark Mode" onclick="toggleDarkMode()">
+            <img id="dark_mode_icon" src="../icons/menu_icon.png" alt="Menu Icon" onclick="">
+        </div>
+    </header>
+</head>
+    <body></body>
+    <script>
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById("dark_mode_icon")
+
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                icon.src = "../icons/dark_mode/dark_mode.png"
+            } else {
+                body.classList.add('light-mode');
+                icon.src = "../icons/dark_mode/light_mode.png"
+            }
+        }
+    </script>
+</html>
